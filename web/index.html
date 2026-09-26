@@ -1,0 +1,306 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>dfs × dls</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Courier+Prime:wght@400;700&display=swap">
+<style>
+:root {
+  color-scheme: light;
+  --bg: #f3ecf8;
+  --paper: #fbf8fd;
+  --ink: #3a2b4a;
+  --soft: #8a7a9c;
+  --line: #d6c7e4;
+  --dfs: #7b4fb8;
+  --dfs-tint: #e3d6f3;
+  --dls: #d0588f;
+  --dls-tint: #f6d7e6;
+  --font: "Courier Prime", "Courier New", ui-monospace, Menlo, monospace;
+}
+* { box-sizing: border-box; }
+body { background: var(--bg); color: var(--ink); font-family: var(--font); font-size: 15px; line-height: 1.5; }
+.wrap { max-width: 940px; margin: 0 auto; padding-inline: 18px; padding-block: 36px 48px; display: grid; gap: 22px; }
+h1 { font-size: 26px; font-weight: 700; margin: 0; letter-spacing: -0.02em; }
+button { font: inherit; color: inherit; background: none; border: 0; padding: 0; cursor: pointer; }
+button:disabled { color: var(--soft); cursor: default; }
+:focus-visible { outline: 2px dotted var(--dfs); outline-offset: 2px; }
+
+.bar { display: flex; flex-wrap: wrap; gap: 10px 26px; align-items: baseline; }
+.opts { display: flex; flex-wrap: wrap; gap: 4px 14px; }
+.opts button { color: var(--soft); }
+.opts button[aria-pressed="true"] { color: var(--ink); text-decoration: underline wavy var(--dls); text-underline-offset: 5px; }
+.opts button:hover:not([aria-pressed="true"]) { color: var(--ink); }
+.limit { display: flex; gap: 8px; align-items: baseline; }
+.limit b { min-width: 2ch; text-align: center; }
+.play { display: flex; flex-wrap: wrap; align-items: center; gap: 12px; margin-left: auto; }
+.play button:hover:not(:disabled) { color: var(--dfs); }
+.speed { display: flex; align-items: center; gap: 6px; color: var(--soft); }
+.speed b { color: var(--ink); font-weight: 400; min-width: 2ch; text-align: right; }
+.speed input { width: 90px; accent-color: var(--dfs); }
+
+.panels { display: grid; grid-template-columns: 1fr 1fr; gap: 18px; }
+@media (max-width: 720px) { .panels { grid-template-columns: 1fr; } .play { margin-left: 0; } }
+.panel { --c: var(--dfs); --t: var(--dfs-tint); background: var(--paper); border: 1px dashed var(--line); padding: 12px 14px 14px; display: grid; gap: 6px; min-width: 0; }
+.panel.dls { --c: var(--dls); --t: var(--dls-tint); }
+.head { display: flex; justify-content: space-between; gap: 10px; }
+.head b { color: var(--c); font-size: 17px; }
+.head span { color: var(--soft); }
+.panel svg { display: block; width: 100%; height: auto; max-height: 400px; }
+.big { min-height: 220px; display: grid; place-content: center; text-align: center; color: var(--soft); }
+.stats { display: grid; grid-template-columns: repeat(4, 1fr); gap: 4px; font-size: 13px; }
+.stats div { display: grid; }
+.stats i { font-style: normal; color: var(--soft); }
+.stats b { font-size: 16px; font-weight: 400; }
+
+.e { stroke: var(--line); stroke-width: 1; }
+.dense .e { stroke-opacity: 0.6; }
+.e.on { stroke: var(--c); stroke-width: 2.5; stroke-opacity: 1; }
+.cost { font-family: var(--font); font-size: 12px; fill: var(--soft); paint-order: stroke; stroke: var(--paper); stroke-width: 4px; }
+.n circle { fill: var(--paper); stroke: var(--soft); stroke-width: 1.2; }
+.n text { font-family: var(--font); font-size: 12px; fill: var(--ink); text-anchor: middle; dominant-baseline: central; }
+.n.fr circle { stroke: var(--c); stroke-dasharray: 2 2; stroke-width: 1.5; }
+.n.ex circle { fill: var(--t); stroke: var(--c); stroke-dasharray: none; }
+.n.on circle { fill: var(--c); stroke: var(--c); }
+.n.on text { fill: var(--paper); }
+.n.st circle { stroke: var(--ink); stroke-width: 2.2; }
+.n .gr { fill: none; stroke: var(--ink); stroke-width: 1; }
+.n .hl { fill: none; stroke: var(--c); stroke-width: 1.5; opacity: 0; }
+.n.cur .hl { opacity: 1; }
+.tag { font-family: var(--font); font-size: 11px; fill: var(--ink); text-anchor: middle; paint-order: stroke; stroke: var(--paper); stroke-width: 4px; }
+.ring { fill: none; stroke: var(--line); stroke-dasharray: 1 4; }
+.lim { fill: none; stroke: var(--dls); stroke-width: 1.3; stroke-dasharray: 6 4; }
+.out { fill: var(--bg); opacity: 0.7; }
+
+.foot { color: var(--soft); font-size: 13px; display: flex; flex-wrap: wrap; gap: 4px 18px; }
+</style>
+</head>
+<body>
+<div class="wrap">
+  <h1>dfs × dls</h1>
+
+  <div class="bar">
+    <div class="opts" id="problems" role="group" aria-label="grafo"></div>
+    <div class="limit" aria-label="limite da dls">
+      limite <button type="button" id="minus" aria-label="diminuir limite">[-]</button><b id="lim">0</b><button type="button" id="plus" aria-label="aumentar limite">[+]</button>
+    </div>
+    <div class="play">
+      <button type="button" id="prev" aria-label="passo anterior">[&lt;]</button>
+      <button type="button" id="toggle">[play]</button>
+      <button type="button" id="next" aria-label="próximo passo">[&gt;]</button>
+      <label class="speed" for="speed">vel. <input type="range" id="speed" min="1" max="20" step="1" value="5"> <b id="speed-val">5</b>/s</label>
+    </div>
+  </div>
+
+  <div class="panels">
+    <section class="panel" id="dfs"></section>
+    <section class="panel dls" id="dls"></section>
+  </div>
+
+  <div class="foot">
+    <span id="route"></span>
+    <span>tracejado = na pilha · cheio = caminho · círculo rosa = limite</span>
+  </div>
+</div>
+
+<script src="data.js"></script>
+<script>
+(function () {
+  const DATA = window.SEARCH_DATA, NS = "http://www.w3.org/2000/svg";
+  const $ = (id) => document.getElementById(id);
+  const S = { pi: 0, limit: 0, t: 0, timer: null };
+  const P = {};
+  let L = null;
+
+  const prob = () => DATA.problems[S.pi];
+  const res = () => ({ dfs: prob().dfs, dls: prob().dls[S.limit] });
+  const limits = () => Object.keys(prob().dls).map(Number);
+  const total = () => Math.max((res().dfs.trace || []).length, (res().dls.trace || []).length);
+  const svg = (tag, a, parent) => { const e = document.createElementNS(NS, tag); for (const k in a) e.setAttribute(k, a[k]); parent && parent.appendChild(e); return e; };
+
+  /* layout radial: início no centro, cada anel = distância até ele */
+  function layout(p) {
+    const out = new Map(), inn = new Map();
+    p.nodes.forEach((n) => { out.set(n, []); inn.set(n, []); });
+    p.edges.forEach(([a, b]) => { out.get(a).push(b); inn.get(b).push(a); });
+    const dist = new Map([[p.start, 0]]), q = [p.start];
+    while (q.length) { const s = q.shift(); for (const n of out.get(s)) if (!dist.has(n)) { dist.set(n, dist.get(s) + 1); q.push(n); } }
+    let maxRing = 0; dist.forEach((d) => { maxRing = Math.max(maxRing, d); });
+    const lost = p.nodes.filter((n) => !dist.has(n));
+    const rings = maxRing + (lost.length ? 1 : 0);
+    const byRing = [];
+    p.nodes.forEach((n) => { const k = dist.has(n) ? dist.get(n) : rings; (byRing[k] = byRing[k] || []).push(n); });
+    const R = 200, cum = [0];
+    for (let k = 1; k <= rings; k++) cum[k] = cum[k - 1] + 1 + Math.sqrt((byRing[k] || []).length) * 0.35;
+    const radius = (k) => (rings ? (cum[Math.min(k, rings)] / cum[rings]) * R : 0);
+    const ang = new Map([[p.start, 0]]), pos = new Map([[p.start, [0, 0]]]);
+    for (let k = 1; k < byRing.length; k++) {
+      const ring = byRing[k] || []; if (!ring.length) continue;
+      const bary = new Map();
+      ring.forEach((n, i) => {
+        const pr = inn.get(n).concat(out.get(n)).filter((m) => ang.has(m) && (m !== p.start || k === 1));
+        if (!pr.length) { bary.set(n, (i / ring.length) * 2 * Math.PI); return; }
+        let x = 0, y = 0; pr.forEach((m) => { x += Math.cos(ang.get(m)); y += Math.sin(ang.get(m)); });
+        bary.set(n, Math.atan2(y, x));
+      });
+      ring.sort((a, b) => bary.get(a) - bary.get(b));
+      const step = Math.min((2 * Math.PI) / ring.length, (1.25 * (R / rings)) / radius(k));
+      let x = 0, y = 0; ring.forEach((n, i) => { const d = bary.get(n) - i * step; x += Math.cos(d); y += Math.sin(d); });
+      const off = Math.atan2(y, x);
+      ring.forEach((n, i) => { const a = off + i * step; ang.set(n, a); pos.set(n, [radius(k) * Math.cos(a), radius(k) * Math.sin(a)]); });
+    }
+    const pts = [...pos.values()];
+    let x0 = Math.min(...pts.map((v) => v[0])), x1 = Math.max(...pts.map((v) => v[0]));
+    let y0 = Math.min(...pts.map((v) => v[1])), y1 = Math.max(...pts.map((v) => v[1]));
+    const pad = p.nodes.length <= 20 ? 34 : 22;
+    x0 -= pad; x1 += pad; y0 -= pad; y1 += pad;
+    const w = x1 - x0, h = Math.max(y1 - y0, w * 0.62), cy = (y0 + y1) / 2;
+    return { pos, rings, maxRing, radius, R, box: [x0, cy - h / 2, w, h] };
+  }
+
+  function build(algo) {
+    const root = $(algo), p = prob();
+    root.innerHTML = `<div class="head"><b>${algo}</b><span data-r="status"></span></div><div data-r="g"></div>
+      <div class="stats"><div><i>explorados</i><b data-r="ex"></b></div><div><i>prof.</i><b data-r="dp"></b></div><div><i>custo</i><b data-r="co"></b></div><div><i>pilha máx.</i><b data-r="fr"></b></div></div>`;
+    const panel = P[algo] = { r: (k) => root.querySelector(`[data-r="${k}"]`), nodes: new Map(), edges: new Map(), lit: [] };
+    if (!p.animate) { panel.r("g").innerHTML = `<div class="big">${p.numNodes} nós<br>grande demais pra desenhar</div>`; return; }
+
+    const small = p.nodes.length <= 20, rad = small ? 14 : (p.nodes.length <= 60 ? 6.5 : 5);
+    const s = svg("svg", { viewBox: L.box.join(" "), role: "img", "aria-label": `grafo ${p.name}, ${algo}` });
+    if (!small) s.classList.add("dense");
+    const defs = svg("defs", {}, s);
+    ["", "-on"].forEach((suf) => {
+      const m = svg("marker", { id: `ar-${algo}${suf}`, viewBox: "0 0 10 10", refX: 9, refY: 5, markerWidth: 6, markerHeight: 6, orient: "auto" }, defs);
+      svg("path", { d: "M0,0L10,5L0,10z", fill: suf ? `var(--${algo})` : "var(--soft)" }, m);
+    });
+    const gr = svg("g", {}, s);
+    for (let k = 1; k <= L.rings; k++) svg("circle", { class: "ring", r: L.radius(k) }, gr);
+    if (algo === "dls") { panel.out = svg("path", { class: "out", "fill-rule": "evenodd" }, gr); panel.lim = svg("circle", { class: "lim" }, gr); }
+    const ge = svg("g", {}, s), gc = svg("g", {}, s), gn = svg("g", {}, s), gt = svg("g", {}, s);
+    const weighted = p.edges.some((e) => e[2] !== 1);
+    p.edges.forEach(([a, b, c]) => {
+      const [xa, ya] = L.pos.get(a), [xb, yb] = L.pos.get(b), dx = xb - xa, dy = yb - ya, d = Math.hypot(dx, dy) || 1;
+      const end = small ? rad + 3 : rad;
+      const line = svg("line", { class: "e", x1: xa + (dx / d) * rad, y1: ya + (dy / d) * rad, x2: xb - (dx / d) * end, y2: yb - (dy / d) * end }, ge);
+      if (small) line.setAttribute("marker-end", `url(#ar-${algo})`);
+      panel.edges.set(a + "|" + b, line);
+      if (small && weighted) svg("text", { class: "cost", x: (xa + xb) / 2, y: (ya + yb) / 2 - 7, "text-anchor": "middle" }, gc).textContent = c;
+    });
+    p.nodes.forEach((v) => {
+      const [x, y] = L.pos.get(v);
+      const g = svg("g", { class: "n" + (v === p.start ? " st" : ""), transform: `translate(${x},${y})` }, gn);
+      svg("circle", { class: "hl", r: rad + 4 }, g);
+      svg("circle", { r: rad }, g);
+      if (v === p.goal) svg("circle", { class: "gr", r: rad + (small ? 4 : 2.5) }, g);
+      svg("title", {}, g).textContent = `nó ${v}`;
+      if (small) svg("text", {}, g).textContent = v;
+      else if (v === p.start || v === p.goal) svg("text", { class: "tag", x, y: y - rad - 7 }, gt).textContent = v === p.start ? "início" : "objetivo";
+      panel.nodes.set(v, g);
+    });
+    panel.r("g").appendChild(s);
+  }
+
+  function view(r, t) {
+    const tr = r.trace || [];
+    if (t <= 0) return { ex: new Set(), fr: [prob().start], cur: null, path: [], depth: 0, n: 0, done: false };
+    const k = Math.min(t, tr.length) - 1, ex = new Set();
+    for (let i = 0; i <= k; i++) ex.add(tr[i].node);
+    const done = t >= tr.length;
+    return { ex, fr: done ? [] : tr[k].frontier, cur: done ? null : tr[k].node, path: done && r.found ? r.path : tr[k].path, depth: tr[k].depth, n: k + 1, done };
+  }
+
+  const STATUS = { "encontrado": "achou", "corte (limite)": "parou no limite", "sem solução": "sem caminho" };
+  const show = (v) => (v === null || v === undefined ? "·" : v);
+
+  function render(algo) {
+    const panel = P[algo], r = res()[algo], p = prob();
+    if (!p.animate) {
+      panel.r("status").textContent = STATUS[r.status];
+      panel.r("ex").textContent = r.nodesExplored; panel.r("dp").textContent = show(r.depth);
+      panel.r("co").textContent = show(r.cost); panel.r("fr").textContent = r.maxFrontier;
+      return;
+    }
+    const v = view(r, S.t);
+    panel.r("status").textContent = v.done ? STATUS[r.status] : (S.t ? "procurando…" : "");
+    panel.r("ex").textContent = v.n;
+    panel.r("dp").textContent = v.done ? show(r.depth) : v.depth;
+    panel.r("co").textContent = v.done ? show(r.cost) : "·";
+    panel.r("fr").textContent = v.done ? r.maxFrontier : "·";
+    const on = new Set(v.path), fr = new Set(v.fr);
+    panel.nodes.forEach((g, n) => {
+      g.classList.toggle("ex", v.ex.has(n));
+      g.classList.toggle("fr", fr.has(n) && !v.ex.has(n));
+      g.classList.toggle("on", on.has(n));
+      g.classList.toggle("cur", n === v.cur);
+    });
+    panel.lit.forEach((l) => { l.classList.remove("on"); if (l.getAttribute("marker-end")) l.setAttribute("marker-end", `url(#ar-${algo})`); });
+    panel.lit = [];
+    for (let i = 0; i + 1 < v.path.length; i++) {
+      const l = panel.edges.get(v.path[i] + "|" + v.path[i + 1]); if (!l) continue;
+      l.classList.add("on"); if (l.getAttribute("marker-end")) l.setAttribute("marker-end", `url(#ar-${algo}-on)`);
+      l.parentNode.appendChild(l); panel.lit.push(l);
+    }
+    if (algo === "dls") {
+      const rr = L.radius(Math.min(S.limit, L.rings)), B = 900;
+      panel.lim.style.display = S.limit > L.rings ? "none" : "";
+      panel.lim.setAttribute("r", rr);
+      panel.out.setAttribute("d", S.limit < L.rings ? `M${-B},${-B}H${B}V${B}H${-B}Z M${rr},0A${rr},${rr} 0 1,0 ${-rr},0A${rr},${rr} 0 1,0 ${rr},0Z` : "");
+    }
+  }
+
+  function all() {
+    const p = prob(), ls = limits();
+    $("lim").textContent = S.limit;
+    $("minus").disabled = S.limit <= ls[0];
+    $("plus").disabled = S.limit >= ls[ls.length - 1];
+    ["prev", "toggle", "next"].forEach((id) => { $(id).disabled = !p.animate; });
+    if (p.animate) { $("prev").disabled = S.t <= 0; $("next").disabled = S.t >= total(); }
+    $("toggle").textContent = S.timer ? "[pause]" : (S.t >= total() ? "[replay]" : "[play]");
+    $("route").textContent = `${p.start} → ${p.goal} · ${p.numNodes} nós`;
+    render("dfs"); render("dls");
+  }
+
+  function pick(i) {
+    stop(); S.pi = i;
+    const p = prob();
+    S.limit = p.estimatedLimit;
+    L = p.animate ? layout(p) : null;
+    $("problems").querySelectorAll("button").forEach((b) => b.setAttribute("aria-pressed", Number(b.dataset.i) === i));
+    build("dfs"); build("dls");
+    S.t = total(); all();
+  }
+  function setLimit(l) { stop(); S.limit = l; S.t = total(); all(); }
+  function go(t) { S.t = Math.max(0, Math.min(total(), t)); all(); }
+  function stop() { clearInterval(S.timer); S.timer = null; }
+  function play() {
+    if (S.t >= total()) S.t = 0;
+    S.timer = setInterval(() => { if (S.t >= total()) { stop(); all(); } else go(S.t + 1); }, 1000 / Number($("speed").value));
+    all();
+  }
+
+  $("problems").innerHTML = DATA.problems.map((p, i) => `<button type="button" data-i="${i}">${p.name}</button>`).join("");
+  $("problems").querySelectorAll("button").forEach((b) => b.addEventListener("click", () => pick(Number(b.dataset.i))));
+  $("minus").addEventListener("click", () => setLimit(S.limit - 1));
+  $("plus").addEventListener("click", () => setLimit(S.limit + 1));
+  $("prev").addEventListener("click", () => { stop(); go(S.t - 1); });
+  $("next").addEventListener("click", () => { stop(); go(S.t + 1); });
+  $("speed").addEventListener("input", (e) => {
+    $("speed-val").textContent = e.target.value;
+    if (S.timer) { stop(); play(); }
+  });
+  $("toggle").addEventListener("click", () => (S.timer ? (stop(), all()) : play()));
+  document.addEventListener("keydown", (e) => {
+    if (!prob().animate) return;
+    if (e.key === " " && e.target.tagName !== "BUTTON") { e.preventDefault(); S.timer ? (stop(), all()) : play(); }
+    else if (e.key === "ArrowRight") { stop(); go(S.t + 1); }
+    else if (e.key === "ArrowLeft") { stop(); go(S.t - 1); }
+  });
+
+  pick(Math.max(0, DATA.problems.findIndex((p) => p.name === "custos")));
+})();
+</script>
+</body>
+</html>
