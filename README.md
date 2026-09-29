@@ -51,6 +51,8 @@ Requer Python 3.9 ou superior e nenhuma biblioteca externa. Rode os comandos a p
 
 ## Visualização web
 
+A página é um site de apresentação em **nove seções**, uma por tela (o navegador rola de uma em uma com *scroll-snap*; navega com as setas `↑` `↓`, com `Home`/`End` ou pelos pontos no rodapé). As oito primeiras são o conteúdo conceitual de DFS e DLS e a nona é a visualização interativa abaixo. Na visualização, as setas `←` `→` dão o passo a passo da busca em vez de trocar de seção.
+
 A página não reimplementa os algoritmos. `dfs` e `dls` aceitam um parâmetro opcional `trace` (uma lista) que recebe um registro por expansão, com o nó expandido, a profundidade, o ramo atual e a pilha. `export_web.py` roda os algoritmos com esse parâmetro e grava tudo em `web/data.js`, e a página apenas anima esses passos. Assim, o que aparece na tela é exatamente o comportamento do código em Python. Sem `trace`, a busca não tem custo extra.
 
 O que a página mostra:

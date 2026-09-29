@@ -1,0 +1,5 @@
+__pycache__/
+*.py[cod]
+/results/
+/web/data.js
+.pytest_cache/
