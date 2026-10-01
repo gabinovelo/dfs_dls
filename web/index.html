@@ -145,6 +145,26 @@ var { font-family: var(--mono); font-style: normal; color: var(--c); font-weight
 .key.bar { width: 18px; height: 0; border: 0; border-top: 2px solid var(--line); border-radius: 0; }
 .key.bar.on { border-top: 2.5px solid var(--ink); }
 
+/* tabelas, fórmula e blocos novos */
+.table-box { background: var(--paper); border: 1px solid var(--line); border-radius: 20px; box-shadow: 0 6px 18px rgba(100, 43, 20, .08); padding: 6px 6px 8px; overflow-x: auto; }
+.table-box table { width: 100%; border-collapse: collapse; font-size: .86em; min-width: 560px; }
+.table-box th, .table-box td { text-align: left; padding: 7px 12px; border-bottom: 1px dashed var(--line); vertical-align: top; }
+.table-box tr:last-child td { border-bottom: 0; }
+.table-box th { font-weight: 600; color: var(--soft); font-size: .9em; }
+.table-box td:first-child { font-weight: 600; color: var(--c); white-space: nowrap; }
+.table-box .num { font-variant-numeric: tabular-nums; white-space: nowrap; }
+.formula { font-family: var(--mono); font-size: clamp(15px, 1.5vw, 21px); color: var(--ink); text-align: center; margin: 4px 0 6px; line-height: 1.9; }
+.formula b { color: var(--dls); }
+.split { display: grid; grid-template-columns: 1fr 1fr; gap: 16px; align-items: center; }
+@media (max-width: 760px) { .split { grid-template-columns: 1fr; } }
+.parts { list-style: none; margin: 0; padding: 0; display: grid; grid-template-columns: repeat(auto-fit, minmax(270px, 1fr)); gap: 12px; counter-reset: part; }
+.parts li { background: var(--paper); border: 1px solid var(--line); border-radius: 16px; padding: 11px 14px; display: grid; grid-template-columns: auto 1fr; gap: 2px 12px; align-items: baseline; }
+.parts li::before { counter-increment: part; content: counter(part); font-family: var(--display); font-weight: 700; font-size: 1.5em; color: var(--dfs); grid-row: span 2; }
+.parts b { font-weight: 600; }
+.parts small { color: var(--soft); font-size: .82em; }
+.key.dash { width: 18px; height: 0; border: 0; border-top: 2px dashed var(--ink); border-radius: 0; }
+.key.bar.c { border-top: 2.5px solid var(--dfs); }
+
 /* capa */
 .capa { gap: 24px; }
 .capa h1 { font-size: clamp(30px, 5.4vw, 66px); line-height: 1.08; letter-spacing: 0; }
@@ -212,12 +232,26 @@ var { font-family: var(--mono); font-style: normal; color: var(--c); font-weight
     <li>Maria Rita De Figueiredo Feitosa</li>
     <li>Sergio Gabriel Rodrigues Freitas</li>
   </ul>
-  <p class="hint">nove seções · use as setas ↑ ↓ para navegar</p>
+  <p class="hint">seis partes · use as setas ↑ ↓ para navegar</p>
+</section>
+
+<!-- roteiro -->
+<section class="slide" id="roteiro" data-t="ink" data-name="roteiro">
+  <p class="eyebrow"><b>roteiro</b> · uma parte por integrante · parte 1</p>
+  <h2>Roteiro da apresentação</h2>
+  <ol class="parts">
+    <li><b>Abertura e contexto</b><small>busca em espaço de estados, árvore de busca</small></li>
+    <li><b>DFS</b><small>o que é, como funciona, como percorre a árvore</small></li>
+    <li><b>DLS</b><small>o que é, como funciona, como escolher o limite k</small></li>
+    <li><b>Fronteira e memória</b><small>a pilha LIFO e o que cada algoritmo guarda</small></li>
+    <li><b>Limitações e complementos</b><small>recursão, custo dos caminhos, outros algoritmos</small></li>
+    <li><b>Testes e visualização</b><small>os grafos usados e a execução ao vivo</small></li>
+  </ol>
 </section>
 
 <!-- 2 · seção 1 -->
 <section class="slide" id="s1" data-t="dfs" data-name="seção 1 · contexto">
-  <p class="eyebrow"><b>seção 1</b> · visão geral e contexto</p>
+  <p class="eyebrow"><b>seção 1</b> · visão geral e contexto · parte 1</p>
   <h2>Busca em espaço de estados</h2>
   <div class="cards">
     <article class="card">
@@ -261,7 +295,7 @@ var { font-family: var(--mono); font-style: normal; color: var(--c); font-weight
 
 <!-- 3 · seção 2, item 1 -->
 <section class="slide t-dfs" id="s2a" data-t="dfs" data-name="seção 2 · dfs · 1">
-  <p class="eyebrow"><b>seção 2</b> · busca em profundidade (dfs)</p>
+  <p class="eyebrow"><b>seção 2</b> · busca em profundidade (dfs) · parte 2</p>
   <h2>DFS: O que é e qual problema resolve?</h2>
   <div class="cards">
     <article class="card">
@@ -280,7 +314,7 @@ var { font-family: var(--mono); font-style: normal; color: var(--c); font-weight
 
 <!-- 4 · seção 2, itens 2 e 3 -->
 <section class="slide t-dfs" id="s2b" data-t="dfs" data-name="seção 2 · dfs · 2 e 3">
-  <p class="eyebrow"><b>seção 2</b> · busca em profundidade (dfs)</p>
+  <p class="eyebrow"><b>seção 2</b> · busca em profundidade (dfs) · parte 2</p>
   <h2>DFS: Como funciona? · Como utiliza a árvore de busca?</h2>
   <div class="cards">
     <article class="card">
@@ -303,7 +337,7 @@ var { font-family: var(--mono); font-style: normal; color: var(--c); font-weight
 
 <!-- 5 · seção 3, item 1 -->
 <section class="slide t-dls" id="s3a" data-t="dls" data-name="seção 3 · dls · 1">
-  <p class="eyebrow"><b>seção 3</b> · busca com profundidade limitada (dls)</p>
+  <p class="eyebrow"><b>seção 3</b> · busca com profundidade limitada (dls) · parte 3</p>
   <h2>DLS: O que é e qual problema resolve?</h2>
   <div class="cards">
     <article class="card">
@@ -319,7 +353,7 @@ var { font-family: var(--mono); font-style: normal; color: var(--c); font-weight
 
 <!-- 6 · seção 3, itens 2 e 3 -->
 <section class="slide t-dls" id="s3b" data-t="dls" data-name="seção 3 · dls · 2 e 3">
-  <p class="eyebrow"><b>seção 3</b> · busca com profundidade limitada (dls)</p>
+  <p class="eyebrow"><b>seção 3</b> · busca com profundidade limitada (dls) · parte 3</p>
   <h2>DLS: Como funciona? · Como utiliza a árvore de busca?</h2>
   <div class="cards">
     <article class="card">
@@ -343,9 +377,47 @@ var { font-family: var(--mono); font-style: normal; color: var(--c); font-weight
   </div>
 </section>
 
+<!-- seção 3, limite -->
+<section class="slide t-dls" id="s3c" data-t="dls" data-name="seção 3 · dls · limite k">
+  <p class="eyebrow"><b>seção 3</b> · busca com profundidade limitada (dls) · parte 3</p>
+  <h2>Como escolher o limite k?</h2>
+  <div class="cards">
+    <article class="card">
+      <h3>O dilema</h3>
+      <ul>
+        <li><b>k pequeno demais:</b> se o objetivo está numa profundidade <var>d &gt; k</var>, a busca falha por corte.</li>
+        <li><b>k grande demais:</b> o trabalho cresce como <var>O(b<sup>k</sup>)</var>, e o caminho achado pode sair longo.</li>
+        <li>O ideal é um k pouco acima da distância típica entre dois nós do grafo.</li>
+      </ul>
+    </article>
+    <article class="card">
+      <h3>Grafo de Erdős–Rényi G(n, p)</h3>
+      <p>Modelo de grafo aleatório usado nos testes: <var>n</var> nós, e cada aresta possível existe com probabilidade <var>p</var>, de forma independente.</p>
+      <ul>
+        <li>Cada nó tem em média <var>b ≈ p·(n − 1)</var> vizinhos.</li>
+        <li>Em <var>d</var> passos a partir de um nó, alcançam-se cerca de <var>b<sup>d</sup></var> nós.</li>
+      </ul>
+    </article>
+  </div>
+  <div class="figure">
+    <p class="formula">b<sup>d</sup> ≈ n &nbsp;⇒&nbsp; d ≈ ln n ⁄ ln b &nbsp;→&nbsp; <b>k = ⌈ln n ⁄ ln b⌉ + 2</b></p>
+    <p class="hint" style="text-align:center">o +2 é uma folga para caminhos acima da média · b é medido no próprio grafo (arestas ÷ nós) · se b ≤ 1, usa-se k = n − 1</p>
+  </div>
+  <div class="table-box">
+    <table>
+      <thead><tr><th>grafo</th><th>n</th><th>b</th><th>ln n ⁄ ln b</th><th>k estimado</th><th>menor profundidade real</th></tr></thead>
+      <tbody>
+        <tr><td>pequeno</td><td class="num">10</td><td class="num">2,1</td><td class="num">3,1</td><td class="num">6</td><td class="num">3</td></tr>
+        <tr><td>médio</td><td class="num">100</td><td class="num">5,7</td><td class="num">2,65</td><td class="num">5</td><td class="num">3</td></tr>
+        <tr><td>grande</td><td class="num">1000</td><td class="num">4,0</td><td class="num">4,99</td><td class="num">7</td><td class="num">5</td></tr>
+      </tbody>
+    </table>
+  </div>
+</section>
+
 <!-- 7 · seção 4, item 1 -->
 <section class="slide" id="s4a" data-t="ink" data-name="seção 4 · fronteira · 1">
-  <p class="eyebrow"><b>seção 4</b> · fronteiras e estratégia de seleção</p>
+  <p class="eyebrow"><b>seção 4</b> · fronteira e memória · parte 4</p>
   <h2>O conceito de fronteira (frontier)</h2>
   <div class="cards">
     <article class="card">
@@ -379,7 +451,7 @@ var { font-family: var(--mono); font-style: normal; color: var(--c); font-weight
 
 <!-- 8 · seção 4, itens 2 e 3 -->
 <section class="slide" id="s4b" data-t="ink" data-name="seção 4 · fronteira · 2 e 3">
-  <p class="eyebrow"><b>seção 4</b> · fronteiras e estratégia de seleção</p>
+  <p class="eyebrow"><b>seção 4</b> · fronteira e memória · parte 4</p>
   <h2>Fronteira do DFS · Fronteira do DLS</h2>
   <div class="cards">
     <article class="card" style="--c: var(--dfs);">
@@ -400,17 +472,183 @@ var { font-family: var(--mono); font-style: normal; color: var(--c); font-weight
   </div>
 </section>
 
+<!-- seção 4, memória -->
+<section class="slide" id="s4c" data-t="ink" data-name="seção 4 · memória">
+  <p class="eyebrow"><b>seção 4</b> · fronteira e memória · parte 4</p>
+  <h2>O que cada algoritmo guarda na memória</h2>
+  <div class="cards">
+    <article class="card" style="--c: var(--dfs);">
+      <h3>DFS (versão para grafos)</h3>
+      <ul>
+        <li>Guarda a pilha, o <b>conjunto de visitados</b> e o pai de cada nó, para nunca expandir um nó duas vezes.</li>
+        <li><b>Memória O(V):</b> cresce com o tamanho do grafo, não com a profundidade.</li>
+        <li><b>Vantagem:</b> cada nó é expandido no máximo uma vez (tempo <var>O(V + E)</var>) e ciclos deixam de ser um problema.</li>
+        <li>Sem visitados (busca em árvore), guardaria só o caminho e os irmãos pendentes: <var>O(b·m)</var>, mas voltaria a cair em ciclos.</li>
+      </ul>
+    </article>
+    <article class="card" style="--c: var(--dls);">
+      <h3>DLS</h3>
+      <ul>
+        <li>Cada entrada da pilha carrega o <b>caminho até o nó</b>; ciclos são evitados checando só esse caminho.</li>
+        <li><b>Memória O(b·k):</b> no máximo k níveis, cada um com até b irmãos pendentes.</li>
+        <li><b>Desvantagem:</b> sem visitados, o mesmo nó pode ser expandido por caminhos diferentes, e o tempo vai a <var>O(b<sup>k</sup>)</var>.</li>
+      </ul>
+    </article>
+  </div>
+  <div class="table-box">
+    <table>
+      <thead><tr><th>grafo grande (1000 nós)</th><th>pilha máxima</th><th>memória de pico</th><th>nós explorados</th><th>profundidade da solução</th></tr></thead>
+      <tbody>
+        <tr><td style="--c: var(--dfs);">DFS</td><td class="num">1196</td><td class="num">133,7 KiB</td><td class="num">867</td><td class="num">506</td></tr>
+        <tr><td style="--c: var(--dls);">DLS (k = 7)</td><td class="num">34</td><td class="num">1,2 KiB</td><td class="num">1232</td><td class="num">7</td></tr>
+      </tbody>
+    </table>
+  </div>
+  <p class="hint">a DLS troca memória por tempo: guarda muito menos, mas reexplora nós.</p>
+</section>
+
+<!-- seção 5, recursão -->
+<section class="slide" id="s5a" data-t="ink" data-name="seção 5 · recursão">
+  <p class="eyebrow"><b>seção 5</b> · limitações e complementos · parte 5</p>
+  <h2>Recursão × pilha explícita</h2>
+  <div class="cards">
+    <article class="card">
+      <h3>Versão recursiva</h3>
+      <ul>
+        <li>Cada chamada da função ocupa um quadro na <b>pilha de chamadas</b> do programa.</li>
+        <li><b>Vantagem:</b> código curto, e o backtracking é automático: retornar da função é voltar ao pai.</li>
+        <li><b>Problema:</b> essa pilha é pequena. No Python o limite padrão é 1000 chamadas; passar disso gera <var>RecursionError</var> (em C ou Java, <i>stack overflow</i>).</li>
+        <li>No grafo grande, o DFS recursivo chegaria a <b>634 chamadas</b> empilhadas, 63% do limite.</li>
+      </ul>
+    </article>
+    <article class="card" style="--c: var(--dfs);">
+      <h3>Versão iterativa (a nossa)</h3>
+      <ul>
+        <li>A fronteira é uma lista comum, limitada só pela memória RAM.</li>
+        <li>A ordem de visita é a mesma: os vizinhos são empilhados em ordem inversa.</li>
+        <li>Testamos um caminho de <b>20 000 nós</b> em sequência, sem erro.</li>
+        <li>A pilha fica acessível, então dá para medir o tamanho e mostrar na tela.</li>
+      </ul>
+    </article>
+    <article class="card" style="--c: var(--dls);">
+      <h3>E a DLS?</h3>
+      <ul>
+        <li>A profundidade das chamadas nunca passa de k, então a versão recursiva é segura.</li>
+        <li>O limite protege também a pilha de chamadas, e não só a busca.</li>
+      </ul>
+    </article>
+  </div>
+</section>
+
+<!-- seção 5, custo -->
+<section class="slide" id="s5b" data-t="ink" data-name="seção 5 · custo">
+  <p class="eyebrow"><b>seção 5</b> · limitações e complementos · parte 5</p>
+  <h2>Profundidade não é custo</h2>
+  <div class="split">
+    <article class="card">
+      <h3>O que os dois algoritmos olham</h3>
+      <ul>
+        <li>Escolhem o próximo nó só pela <b>ordem da pilha</b>, nunca pelo peso das arestas.</li>
+        <li>O custo é somado depois, apenas para relatar o resultado.</li>
+        <li>O limite k regula só a <b>profundidade</b> (número de arestas), e não o custo.</li>
+        <li>Por isso nenhum dos dois é ótimo em custo, e o DFS não é ótimo nem em profundidade.</li>
+      </ul>
+    </article>
+    <div class="figure">
+      <svg viewBox="0 0 380 200" role="img" aria-label="grafo de custos: o caminho S, A, G custa 20; o caminho S, B, C, G custa 3">
+        <defs>
+          <marker id="ar-cost" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="6" markerHeight="6" orient="auto"><path d="M0,0L10,5L0,10z" fill="var(--soft)" /></marker>
+          <marker id="ar-cost-on" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="6" markerHeight="6" orient="auto"><path d="M0,0L10,5L0,10z" fill="var(--dfs)" /></marker>
+        </defs>
+        <g fill="none">
+          <line x1="57" y1="92" x2="149" y2="48" stroke="var(--dfs)" stroke-width="2.5" marker-end="url(#ar-cost-on)" />
+          <line x1="198" y1="41" x2="319" y2="56" stroke="var(--dfs)" stroke-width="2.5" marker-end="url(#ar-cost-on)" />
+          <line x1="57" y1="110" x2="129" y2="156" stroke="var(--ink)" stroke-width="1.5" stroke-dasharray="5 4" marker-end="url(#ar-cost)" />
+          <line x1="168" y1="165" x2="248" y2="165" stroke="var(--ink)" stroke-width="1.5" stroke-dasharray="5 4" marker-end="url(#ar-cost)" />
+          <line x1="281" y1="149" x2="327" y2="80" stroke="var(--ink)" stroke-width="1.5" stroke-dasharray="5 4" marker-end="url(#ar-cost)" />
+        </g>
+        <text class="cost" x="96" y="60" text-anchor="middle">10</text>
+        <text class="cost" x="258" y="38" text-anchor="middle">10</text>
+        <text class="cost" x="84" y="146" text-anchor="middle">1</text>
+        <text class="cost" x="208" y="157" text-anchor="middle">1</text>
+        <text class="cost" x="316" y="122" text-anchor="middle">1</text>
+        <g class="n st on" transform="translate(40,100)" style="--c: var(--dfs);"><circle r="16" /><text>S</text></g>
+        <g class="n on" transform="translate(180,40)" style="--c: var(--dfs);"><circle r="16" /><text>A</text></g>
+        <g class="n" transform="translate(150,165)"><circle r="16" /><text>B</text></g>
+        <g class="n" transform="translate(268,165)"><circle r="16" /><text>C</text></g>
+        <g class="n on" transform="translate(338,62)" style="--c: var(--dfs);"><circle r="16" /><circle class="gr" r="20" /><text>G</text></g>
+      </svg>
+      <ul class="legend">
+        <li><i class="key bar c"></i>DFS e DLS (k ≥ 2): S → A → G, custo 20</li>
+        <li><i class="key dash"></i>mais barato: S → B → C → G, custo 3</li>
+        <li>com k = 1, a DLS para no limite</li>
+      </ul>
+    </div>
+  </div>
+</section>
+
+<!-- seção 5, complementos -->
+<section class="slide" id="s5c" data-t="ink" data-name="seção 5 · complementos">
+  <p class="eyebrow"><b>seção 5</b> · limitações e complementos · parte 5</p>
+  <h2>Algoritmos que complementam DFS e DLS</h2>
+  <p class="hint">não são o foco do trabalho: cada um corrige uma perda dos dois algoritmos, pagando um preço.</p>
+  <div class="table-box">
+    <table>
+      <thead><tr><th>algoritmo</th><th>ideia</th><th>o que corrige</th><th>preço</th></tr></thead>
+      <tbody>
+        <tr><td style="--c: var(--dls);">Aprofundamento iterativo (IDS)</td><td>roda a DLS com k = 0, 1, 2, … até achar o objetivo</td><td>não precisa escolher k; é completo e acha o caminho com menos arestas, com memória O(b·d)</td><td>refaz os níveis rasos a cada rodada (pouco, pois a maioria dos nós está no último nível)</td></tr>
+        <tr><td>Busca em largura (BFS)</td><td>fronteira em fila (FIFO): expande nível por nível</td><td>acha o caminho com menos arestas</td><td>memória O(b<sup>d</sup>): guarda um nível inteiro</td></tr>
+        <tr><td>Custo uniforme (Dijkstra)</td><td>fila de prioridade pelo custo acumulado g(n)</td><td>acha o caminho mais barato: custo 3 em vez de 20 no grafo de custos</td><td>mais memória e tempo; não sabe para que lado fica o objetivo</td></tr>
+        <tr><td>A*</td><td>prioridade por g(n) + h(n), com uma heurística h</td><td>caminho mais barato, explorando menos nós</td><td>precisa de uma boa heurística (é busca informada)</td></tr>
+      </tbody>
+    </table>
+  </div>
+</section>
+
+<!-- seção 6, testes -->
+<section class="slide" id="s6a" data-t="ink" data-name="seção 6 · testes">
+  <p class="eyebrow"><b>seção 6</b> · testes e visualização · parte 6</p>
+  <h2>Os grafos de teste</h2>
+  <div class="table-box">
+    <table>
+      <thead><tr><th>grafo</th><th>nós</th><th>arestas</th><th>início → objetivo</th><th>como foi gerado</th><th>k estimado</th><th>menor profundidade</th></tr></thead>
+      <tbody>
+        <tr><td>pequeno</td><td class="num">10</td><td class="num">21</td><td class="num">0 → 9</td><td>G(n, p), p = 0,30</td><td class="num">6</td><td class="num">3</td></tr>
+        <tr><td>médio</td><td class="num">100</td><td class="num">570</td><td class="num">0 → 99</td><td>G(n, p), p = 0,05</td><td class="num">5</td><td class="num">3</td></tr>
+        <tr><td>grande</td><td class="num">1000</td><td class="num">3994</td><td class="num">0 → 999</td><td>G(n, p), p = 0,004</td><td class="num">7</td><td class="num">5</td></tr>
+        <tr><td>custos</td><td class="num">5</td><td class="num">5</td><td class="num">S → G</td><td>montado à mão, pesos 1 e 10</td><td class="num">3</td><td class="num">2 (menor custo: 3)</td></tr>
+      </tbody>
+    </table>
+  </div>
+  <div class="cards">
+    <article class="card">
+      <ul>
+        <li>Todos são direcionados e gerados com semente fixa: cada execução usa exatamente o mesmo grafo.</li>
+        <li>O gerador garante que existe caminho do início ao objetivo.</li>
+        <li>Nos grafos aleatórios toda aresta custa 1; só o grafo de custos tem pesos diferentes.</li>
+      </ul>
+    </article>
+    <article class="card">
+      <ul>
+        <li><b>Medimos:</b> nós explorados, profundidade, custo, tamanho máximo da pilha, tempo e memória.</li>
+        <li>O grafo grande não é desenhado na visualização; ela mostra só as métricas.</li>
+      </ul>
+    </article>
+  </div>
+</section>
+
 <!-- 9 · visualização -->
 <section class="slide demo" id="demo" data-t="ink" data-name="visualização">
-  <p class="eyebrow"><b>visualização</b> · execução real dos algoritmos</p>
+  <p class="eyebrow"><b>seção 6</b> · visualização · parte 6</p>
   <h2>Os dois algoritmos, no mesmo passo</h2>
   <div class="wrap">
     <div class="bar">
       <div class="opts" id="problems" role="group" aria-label="grafo"></div>
       <div class="limit" aria-label="limite da dls">
-        limite <button type="button" id="minus" aria-label="diminuir limite">[-]</button><b id="lim">0</b><button type="button" id="plus" aria-label="aumentar limite">[+]</button>
+        limite k <button type="button" id="minus" aria-label="diminuir limite">[-]</button><b id="lim">0</b><button type="button" id="plus" aria-label="aumentar limite">[+]</button>
       </div>
       <div class="play">
+        <button type="button" id="reset" aria-label="voltar ao início da busca">[reiniciar]</button>
         <button type="button" id="prev" aria-label="passo anterior">[&lt;]</button>
         <button type="button" id="toggle">[play]</button>
         <button type="button" id="next" aria-label="próximo passo">[&gt;]</button>
@@ -425,7 +663,7 @@ var { font-family: var(--mono); font-style: normal; color: var(--c); font-weight
 
     <div class="foot">
       <span id="route"></span>
-      <span>tracejado = na pilha · cheio = caminho · círculo rosa = limite</span>
+      <span>tracejado = na pilha · cheio = caminho · círculo tracejado = limite k</span>
     </div>
   </div>
   <p class="hint">escolha um grafo, ajuste o limite <var>k</var> e rode com [play] · nesta seção as setas ← → dão o passo a passo da busca</p>
@@ -437,7 +675,7 @@ var { font-family: var(--mono); font-style: normal; color: var(--c); font-weight
   <button type="button" id="deck-prev" aria-label="seção anterior">[&lt;]</button>
   <ol class="dots" id="deck-dots"></ol>
   <button type="button" id="deck-next" aria-label="próxima seção">[&gt;]</button>
-  <b class="deck-count" id="deck-count">1/9</b>
+  <b class="deck-count" id="deck-count">1/16</b>
 </nav>
 
 <script src="data.js"></script>
@@ -452,7 +690,7 @@ var { font-family: var(--mono); font-style: normal; color: var(--c); font-weight
   const prob = () => DATA.problems[S.pi];
   const res = () => ({ dfs: prob().dfs, dls: prob().dls[S.limit] });
   const limits = () => Object.keys(prob().dls).map(Number);
-  const total = () => Math.max((res().dfs.trace || []).length, (res().dls.trace || []).length);
+  const total = () => (prob().animate ? Math.max((res().dfs.trace || []).length, (res().dls.trace || []).length) : 1);
   const svg = (tag, a, parent) => { const e = document.createElementNS(NS, tag); for (const k in a) e.setAttribute(k, a[k]); parent && parent.appendChild(e); return e; };
 
   /* layout radial: início no centro, cada anel = distância até ele */
@@ -552,13 +790,16 @@ var { font-family: var(--mono); font-style: normal; color: var(--c); font-weight
   function render(algo) {
     const panel = P[algo], r = res()[algo], p = prob();
     if (!p.animate) {
-      panel.r("status").textContent = STATUS[r.status];
-      panel.r("ex").textContent = r.nodesExplored; panel.r("dp").textContent = show(r.depth);
-      panel.r("co").textContent = show(r.cost); panel.r("fr").textContent = r.maxFrontier;
+      const done = S.t >= 1;
+      panel.r("status").textContent = done ? STATUS[r.status] : "pronto";
+      panel.r("ex").textContent = done ? r.nodesExplored : 0;
+      panel.r("dp").textContent = done ? show(r.depth) : 0;
+      panel.r("co").textContent = done ? show(r.cost) : "·";
+      panel.r("fr").textContent = done ? r.maxFrontier : "·";
       return;
     }
     const v = view(r, S.t);
-    panel.r("status").textContent = v.done ? STATUS[r.status] : (S.t ? "procurando…" : "");
+    panel.r("status").textContent = v.done ? STATUS[r.status] : (S.t ? "procurando…" : "pronto");
     panel.r("ex").textContent = v.n;
     panel.r("dp").textContent = v.done ? show(r.depth) : v.depth;
     panel.r("co").textContent = v.done ? show(r.cost) : "·";
@@ -590,8 +831,9 @@ var { font-family: var(--mono); font-style: normal; color: var(--c); font-weight
     $("lim").textContent = S.limit;
     $("minus").disabled = S.limit <= ls[0];
     $("plus").disabled = S.limit >= ls[ls.length - 1];
-    ["prev", "toggle", "next"].forEach((id) => { $(id).disabled = !p.animate; });
-    if (p.animate) { $("prev").disabled = S.t <= 0; $("next").disabled = S.t >= total(); }
+    $("reset").disabled = S.t <= 0 && !S.timer;
+    $("prev").disabled = S.t <= 0;
+    $("next").disabled = S.t >= total();
     $("toggle").textContent = S.timer ? "[pause]" : (S.t >= total() ? "[replay]" : "[play]");
     $("route").textContent = `${p.start} → ${p.goal} · ${p.numNodes} nós`;
     render("dfs"); render("dls");
@@ -604,9 +846,9 @@ var { font-family: var(--mono); font-style: normal; color: var(--c); font-weight
     L = p.animate ? layout(p) : null;
     $("problems").querySelectorAll("button").forEach((b) => b.setAttribute("aria-pressed", Number(b.dataset.i) === i));
     build("dfs"); build("dls");
-    S.t = total(); all();
+    S.t = 0; all();
   }
-  function setLimit(l) { stop(); S.limit = l; S.t = total(); all(); }
+  function setLimit(l) { stop(); S.limit = l; S.t = 0; all(); }
   function go(t) { S.t = Math.max(0, Math.min(total(), t)); all(); }
   function stop() { clearInterval(S.timer); S.timer = null; }
   function play() {
@@ -619,6 +861,7 @@ var { font-family: var(--mono); font-style: normal; color: var(--c); font-weight
   $("problems").querySelectorAll("button").forEach((b) => b.addEventListener("click", () => pick(Number(b.dataset.i))));
   $("minus").addEventListener("click", () => setLimit(S.limit - 1));
   $("plus").addEventListener("click", () => setLimit(S.limit + 1));
+  $("reset").addEventListener("click", () => { stop(); go(0); });
   $("prev").addEventListener("click", () => { stop(); go(S.t - 1); });
   $("next").addEventListener("click", () => { stop(); go(S.t + 1); });
   $("speed").addEventListener("input", (e) => {
@@ -627,13 +870,13 @@ var { font-family: var(--mono); font-style: normal; color: var(--c); font-weight
   });
   $("toggle").addEventListener("click", () => (S.timer ? (stop(), all()) : play()));
   document.addEventListener("keydown", (e) => {
-    if (!prob().animate || document.body.dataset.slide !== "demo") return;
+    if (document.body.dataset.slide !== "demo") return;
     if (e.key === " " && e.target.tagName !== "BUTTON") { e.preventDefault(); S.timer ? (stop(), all()) : play(); }
     else if (e.key === "ArrowRight") { stop(); go(S.t + 1); }
     else if (e.key === "ArrowLeft") { stop(); go(S.t - 1); }
   });
 
-  pick(Math.max(0, DATA.problems.findIndex((p) => p.name === "custos")));
+  pick(Math.max(0, DATA.problems.findIndex((p) => p.name === "pequeno")));
 })();
 
 /* ---- deck: uma seção por tela, navegação por teclado e pelos pontos ---- */
